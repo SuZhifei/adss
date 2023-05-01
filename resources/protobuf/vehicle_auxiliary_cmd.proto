@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package IBUS;
+
+// vehicle_auxiliary_cmd.proto
+
+message VehicleAuxiliaryCmd {
+    Header header=1;
+    uint32 horn =2;                          //喇叭，0:无效，1:关闭，2:打开
+    uint32 airConditioner=3;                 //空调，0:无效，1:关闭，2:开启
+    uint32 leftLight=4;                      //左转灯，0:无效，1:关闭，2:打开
+    uint32 rightLight=5;                     //右转灯，0:无效，1:关闭，2:打开
+    uint32 lowLightStatus=6;                 //近光灯灯输出状态　0:无效　1:关闭 2:开 3: 故障  
+    uint32 highLightStatus=7;                //远光灯输出状态　0:无效　1:关闭 2:开 3: 故障  
+    uint32 emergencyDoubleFlashLight=8;      //双闪灯，0:无效，1:关闭，2:打开
+    uint32 frontFogLightStatus=9;            //前雾灯，0:无效，1:关闭，2:打开
+    uint32 rearFogLightStatus=10;            //后雾灯，0:无效，1:关闭，2:打开
+    uint32 tipperHopper=11;                  //翻斗控制，0:无效，1:升起，2:停止，3:落下
+    float  tipperHopperSpeed=12;             //翻斗升降速度
+    uint32 targetCurvatureFlag=13;           //目标曲率标识，0:无效，1:激活，2:未激活
+    double targetCurvature=14;               //目标曲率
+    float  vehicleWeight=15;                 //车身重量，毛重,单位：吨
+    uint32 autoHold=16;                      //自动驻车停车制动（AUTO HOLD）使能，0:无效，1:停车制动取消，2:停车制动生效           
+    uint32 diffLock=17;                      //差速锁控制: 0:无效  1: 关闭； 2 打开 
+    uint32 cleaningSystemWorkStatus=18;      //清洗装置控制状态: 1 关闭； 2 打开 
+    uint32 cleaningSystemWorkMode=19;        //清洗装置工作模式：1 手动； 2 自动   以下49~59共11个参数，仅当模式为手动时生效  备注：本阶段仅支持自动清洗，手动控制逻辑待讨论；
+    uint32 wiperWaterPump1=20;               //雨刮器水泵1控制状态：1 停止； 2 开启 
+    uint32 wiperWaterPump2=21;               //雨刮器水泵2控制状态：1 停止； 2 开启 
+    uint32 wiperValve1=22;                   //雨刮器气阀1控制状态：1 停止； 2 开启 
+    uint32 wiperValve2=23;                   //雨刮器气阀2控制状态：1 停止； 2 开启 
+    uint32 wiperValve3=24;                   //雨刮器气阀3控制状态：1 停止； 2 开启 
+    uint32 wiperHeating1=25;                 //雨刮器加热1控制状态：1 停止； 2 开启 
+    uint32 wiperHeating2=26;                 //雨刮器加热2控制状态：1 停止； 2 开启 
+    uint32 wiperHeating3=27;                 //雨刮器加热3控制状态：1 停止； 2 开启 
+    uint32 wiperWaterPumpTime=28;            //雨刮器水泵工作时长  单位：秒
+    uint32 wiperValveTime=29;                //雨刮器气阀工作时长  单位：秒
+    uint32 wiperHeatingTime=30;              //雨刮器加热工作时长  单位：秒
+    uint32 selfcheck=31;                     //决策下发的自动驾驶自检状态， 0x0：初始值， 
+                                             //                        0x01：自动驾驶系统可用，未进入自动驾驶模式；（AI白色），
+                                             //                        0x02：自动驾驶系统不可用，有故障或条件不满足；（AI红色），
+                                             //                        0x03：进入自动驾驶模式（AI绿色），
+                                             //                        0x04：系统状态指示：可用，但有警告
+                                             //                        0x05：系统状态指示：条件不满足且无故障
+                                             //                        其他 ：无效 0x19FF452D第1.1-1.3字节
+}

@@ -1,0 +1,14 @@
+syntax="proto3";
+
+package IBUS;
+
+message FaultProcInfo{
+string   fault_name = 1;         //故障名称
+int32    fault_level =2;         //故障等级
+}
+
+message FaultProcMsg{
+	bool             has_fault = 1;            //是否有故障，true：有故障；false：无故障
+	FaultProcInfo    max_level_fault = 2;      //最高等级故障
+    repeated FaultProcInfo fault_list = 3;     //故障信息列表,列表为空表示没有故障
+}

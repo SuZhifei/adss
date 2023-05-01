@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package IBUS;
+import "common.proto";
+
+message RPY{
+      float pitch = 9;           //俯仰角 度 [-90,90]   上抬起为正
+      float roll = 10;           //横滚角 度 [-180,180] 右下压为正
+      float yaw = 11;            //航向角 度 [0,360]
+}
+
+message Bias {  
+     Point3D LinearAccelerationBias =1; //M 线加速度零偏  Point3D    {m/s2, m/s2,m/s2}
+     Point3D AngularVelocityBias =2;    //M 角速度零偏    Point3D{rad/s2,rad/s2,rad/s2}
+     repeated double Covariance=3;      //O 协方差        Point3D
+}
+
+
+message LocationService{  
+     Header header=1;                       //M 定位服务数据包头  Header 6 
+     FRAMETYPE ParentCoordinate=2;   //O 父坐标系          枚举      0: Unknow;1: Vehicle; 2: WGS84;3: UTM;
+     FRAMETYPE ChildCoordinate=3;    //O 子坐标系          枚举      0: Unknow;1: Vehicle; 2: WGS84;3: UTM;
+     enum pStatus{
+          GOOD=0;
+          POSITION_NOT_GOOD=1;
+          ORIENTATIONNOTGOOD=2;
+     }
+     pStatus PositionStatus =4;    //M 定位模块状态      枚举      0: Good;1:PositionNotGood 2:OrientationNotGood；
+     uint32 UTMZoneID=5;           //O UTM 分区号        Integer   [1..60]
+     bool IsSouth=6;               //O 南北半球标志位    Bool      True:南半球； False:北半球
+     uint32 OffsetX=7;             //O UTM 区内偏移量    Intege
+     uint32 OffsetY=8;             //O UTM 区内偏移量    Intege
+     Point3D RefPoint=9;           //O 针对停车场或者其它特殊场景的参考点位置，该点在全局坐标系下位置描述   Point3D
+     Pose pose=10;                 //M 位姿              Pose 6.3
+     Velocity Vel=11;              //M 速度              Velocity 0
+     Acceleration acc=12;          //M 加速度            Acceleration
+     Bias imub=13;                 //O 零点偏置          Bias 6.6
+     RPY rpy=14;
+}

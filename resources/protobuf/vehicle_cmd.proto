@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package IBUS;
+
+// vehicle_cmd.proto
+
+message VehicleCmd {
+    Header  header=1;
+    uint32  controlSrcId=2;	                  //控制源，0:无效，10:自动驾驶大决策，20:小决策，30:手柄控制,50:PAD控制,60:云端，70:车身，80:远程驾驶，168:ROOT 
+    uint32  currentSrcId=3;                   //当前控制源，当controlSrcId为ROOT时有效。
+    uint32  autoMode=4;                       //驾驶模式: 0:无效，1:自动驾驶，2:人工驾驶
+    uint32  steeringWheelMode=5;              //方向盘控制状态
+    double  steeringWheelAngle=6;             //方向盘转角
+    double  steeringWheelSpeed=7;             //方向盘转角
+    uint32  driveActivationFlag=8;            //驱动激活标志，0:无效，1:不激活驱动控制，2:激活驱动控制
+    double  throttleOpening=9;	              //目标油门开度0~100
+    uint32  brakingStatusFlag=10;             //制动标识,0:无效，1:未制动，2: 制动（下发减速度标识)，3：制动（下发开度标识）
+    double  brakingDeceleration=11;           //制动减速度
+    double  breakPedalOpening=12;             //制动踏板开度，0~100
+    uint32  emergencyStopFlag=13;             //紧急制动标识，0:无效，1:未激活，2:激活
+    double  emergencyStopAcc=14;              //紧急制动减速度   报文：0x0CFFD12A， 第7字节的0~1位。
+    uint32  epbStatus=15;                     //EPB状态请求   0：无效  1：释放  2：拉起 其他值:保留
+    uint32  gear=16;	                      //档位, 0:无效，1:N档，2:D档，3:R档，4:L档, 5: P档
+}

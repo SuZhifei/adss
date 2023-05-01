@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package IBUS;
+
+// vehicle_auxiliary_info.proto
+
+message TyreInfo
+{
+	uint32 tyreLocation=1;   //轮胎位置
+	uint32 tyrePressure=2;   //轮胎压力
+	uint32 tyreTemperature=3;//轮胎压力
+	uint32 tyreSpeed=4;      //轮胎转速
+};
+
+message TyreInfoList
+{  
+	repeated TyreInfo tyreInfoList=1;
+};
+
+message VehicleAuxiliaryInfo {
+    Header       header=1;                           //标准头信息
+    uint32       leftLightStatus=2;                  //左转灯　0:无效　1:关闭 2:开 
+    uint32       rightLightStatus=3;                 //右转灯　0:无效　1:关闭 2:开 
+    uint32       lowLightStatus=4;                   //近光灯灯输出状态　0:无效　1:关闭 2:开 3: 故障  
+    uint32       highLightStatus=5;                  //远光灯输出状态　0:无效　1:关闭 2:开 3: 故障 
+    uint32       emergencyLightStatus=6;             //双闪灯　0:无效　1:关闭 2:开	
+    uint32       frontFogLightStatus=7;              //前雾灯　0:无效　1:关闭 2:开 
+    uint32       rearFogLightStatus=8;               //后雾灯　0:无效　1:关闭 2:开 
+    uint32       motorRotationDirection=9;           //电机旋转方向　0:无效　1:正转 2:反转
+    uint32       hornStatus=10;                      //喇叭 0:无效　1:关闭 2:开 3: 故障
+    bool         yawInvaild=11;                      //横摆角速度信号是否故障
+    double       yawRate=12;                         //横摆角速度 -3.92~3.92范围再确定？？
+    double       lateralAcceleration=13;             //侧向加速度 -15.687~15.687 
+    double       longitudinalAcceleration=14;        //纵向加速度 -12.5~12.5
+    uint32       batteryCapacity=15;                 //电池容量SOC　0~100
+    uint32       airConditionerStatus=16;            //空调状态  0:无效　1:关闭 2:开 3: 故障
+    uint32       smallDecisionStatus=17;             //小决策状态，0:无效　1:不使能　2:使能　3:超时
+    uint32       szWaterPercent=18;                  //上装水位百分比，0~100
+    TyreInfoList tyreInfoList=19;                    //轮胎信息列表
+    uint32       tipperHopperStatus=20;              //翻斗状态 0:未更新，1：未举升，2：举升过程中，3：举升至顶位，4：下降过程中， 5：停止状态
+    uint32       tipperHopperErrStatus=21;	          //翻斗故障种类 0：未更新，1：无故障，2：取力器故障失效处理
+    uint32       electronicParkingIndication=22;     //电子驻车指示　0:无效　1:驻车制动已启用 2:驻车制动已释放 3:请松手刹起步, 报文0x18FF1424的6.5~6.8字节
+    double       feedbackCurvature=23;               //反馈曲率
+    double       wheelAngleVoltageSignalFeedback=24; //车轮角度电压信号
+    uint32       diffLockStatus=25;                  //差速锁状态，0:无效 1:关闭　2:打开
+    uint32       cleaningSystemWorkMode=26;          //清洗系统工作模式，0:无效 1:手动　2:自动            
+    uint32       cleaningSystemWorkStatus=27;        //清洗系统工作状态，0:无效 1:停止　2:开启
+    float        liquidTemperature=28;               //清洗系统罐内液体温度，-40~80                
+    float        liquidLevelStatus=29;               //清洗系统液位状态，0~100
+    uint32       cleaningSystemFaultLevel=30;        //清洗系统故障等级，0:无效　1:无故障　2:一级故障　3:二级故障　4:三级故障
+    uint32       cleaningSystemFaultCode=31;         //清洗系统故障代码，0~63
+    uint32       driverEpbOn=32;                     //EPB开关拉起（大巴车用手抠开关）0:无效　1:不使能　2:使能 0x19FFFA24第3.2字节
+    uint32       driverEpbOff=33;                    //EPB开关释放（大巴车用手抠开关）0:无效　1:不使能　2:使能 0x19FFFA24第3.3字节
+    uint32       leftDoor1=34;                       //左门1状态 0: 无效，1:关 2:开，其它无效 0x18FFCC17第1.1-1.2字节
+    uint32       leftDoor2=35;                       //左门2状态 0: 无效，1:关 2:开，其它无效 0x18FFCC17第1.3-1.4字节
+    uint32       leftDoor3=36;                       //左门3状态 0: 无效，1:关 2:开，其它无效 0x18FFCC17第1.5-1.6字节
+    uint32       leftDoor4=37;                       //左门4状态 0: 无效，1:关 2:开，其它无效 0x18FFCC17第1.7-1.8字节
+    uint32       rightDoor1=38;                      //右门1状态 0: 无效，1:关 2:开，其它无效 0x18FFCC17第2.1-2.2字节
+    uint32       rightDoor2=39;                      //右门2状态 0: 无效，1:关 2:开，其它无效 0x18FFCC17第2.3-2.4字节
+    uint32       rightDoor3=40;                      //右门3状态 0: 无效，1:关 2:开，其它无效 0x18FFCC17第2.5-2.6字节
+    uint32       rightDoor4=41;                      //右门4状态 0: 无效，1:关 2:开，其它无效 0x18FFCC17第2.7-2.8字节
+    uint32       seatBeltStatus=42;                  //安全带状态 00：未系或安全带无效，01：系上安全带，10：错误状态，11：不使用 0x18FEED10第1.7-1.8字节
+    uint32       leaveSeatStatus=43;                 //离座状态 0: 无效，01：离座，10：在座  0x18FFCC17第8.5-8.6字节
+    uint32       holdSteeringWheel=44;               //手握方向盘状态 00: 无效, 01: 抓握方向盘信号, 10：未抓握方向盘信号, 11: 预留 0x18FEED10第7.1-7.2字节
+    float        leftFrontWheelSpeed=45;             //左前轮轮速 0x08FE6E0B报文第1.1-2.8字节
+    float        rightFrontWheelSpeed=46;            //右前轮轮速 0x08FE6E0B报文第3.1-4.8字节
+    float        leftRearWheelSpeed=47;              //左后轮轮速 0x08FE6E0B报文第5.1-6.8字节
+    float        rightRearWheelSpeed=48;             //右后轮轮速 0x08FE6E0B报文第7.1-8.8字节
+    uint32       collisionTape=49;                   //碰撞胶条使能信号 0:不进行碰撞保护, 1:碰撞保护介入, 其他:无效
+}

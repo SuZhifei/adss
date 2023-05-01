@@ -1,0 +1,20 @@
+syntax="proto3";
+
+package IBUS;
+
+message FaultReportInfo{
+string   fault_name = 1;              //故障名称
+int32    fault_level = 2;             //故障等级
+string   fault_generate_uint = 3;     //故障产生单元
+string   fault_check_uint = 4;        //故障检测单元
+string   fault_influence = 5;         //故障影响
+string   fualt_recovery_strategy = 6; //故障恢复机制
+bool     fault_lock = 7;              //故障是否锁定
+bool     fault_remote_clear = 8;      //故障是否远程清除
+string   maintain_suggestions = 9;    //维修建议
+}
+
+message FaultReportMsg{
+	bool     has_fault = 1;                      //是否有故障，true：有故障；false：无故障
+    repeated FaultReportInfo fault_list = 2;     //故障信息列表,列表为空表示没有故障
+}

@@ -1,0 +1,203 @@
+//DecisionInterface.proto
+syntax = "proto3";
+package IBUS;
+import "common.proto";
+
+message Recommendation{
+    uint64 CurrentSequenceIDs=1;
+    uint64 TargetSequeceIDs=2;
+    uint32 SpeedLimits=3;
+}
+
+message MissionDecision{
+    enum MissionType{
+    END_POINT=0;
+    CRUISE= 1;
+    STOP=2;
+    LANE_CHANGE_LEFT=3;
+    LANE_CHANGE_RIGHT=4;
+    PARKING=5;
+    U_TURN=6;
+    TURN_LEFT=7;
+    TURN_RIGHT=8;
+    WORKING_L=9; //9-13为环卫新增扩充的信息
+    WORKING_R=10;
+    WORKING_ALL=11;
+    LANE_BORROW_L=12;
+    LANE_BORROW_R=13;
+}
+    MissionType type=1;
+    uint32 LaneAttached=2;//optional
+    uint32 ParkingLotsAttached=3;//optional
+    double HeadingAttached=4;//optional
+enum StatusMDecision{
+    NORMAL=0;
+    EMERGENCY=1;
+    COLLSION_WARNING=2;
+    FAILURE_DECTECTED=3;
+}
+    StatusMDecision StatusAttached=5;
+    Point2D ParkingPoint=6;//6为环卫新增的目标泊车点坐标信息optional
+}
+
+message DDTDecision {
+message ObjectDecision{
+    uint32 ObjectID=1;
+enum type{
+    O_IGNORE=0;
+    O_STOP=1;
+    O_FOLLOW=2;
+    O_OVERTAKE=3;
+    O_YIELD=4;
+    O_BYPASS=5;
+}
+    type ObjectDType=2;
+    double HeadingAttached=3;//optional
+enum DDTState{
+    NORMAL=0;
+    EMERGENCY=1;
+    COLLSION_WARNING=2;
+    FAILURE_DECTECTED=3;
+}
+    DDTState StatusAttached=4;
+    double SafetLateralDistance=5;//optional
+    double SafetyLongitudinalDistance=6;
+}
+    repeated ObjectDecision ObjectsDecisions=1;
+}
+
+enum TrajectoryType {
+    UNKNOWN = 0;
+    NORMAL = 1;
+    FALLBACK = 2;
+}
+message TrajectoryPoint{
+    Point3D position=1;
+    double theta=2;
+    double kappa=3;
+    uint32 laneID=4;
+    double TimeRelativeToStart=5;
+    double Heading=6;
+    double Speed=7;
+    double Accel=8;
+    //9-11为矿卡新增扩充的信息
+    double grade=9;//坡度值，矿卡扩充信息
+    double s=10;//距离轨迹起点s值，矿卡扩充信息
+    double steer=11;//前轮转角
+}
+
+message RefLinePoint{//参考线信息，矿卡扩充信息
+    double s=1;//道路原坐标s
+    double l=2;//道路原坐标l
+    Point3D point=3;//位置      环卫BRT只填充2维度x y
+    double theta=4;//航向角
+    double kappa=5;//曲率
+    double grade=6;//坡度
+    double width=7;//宽度
+    double laneid=8;//参考线所在车道，适配BRT多车道
+}
+message PathBoundPoint{//道路边界信息 1-2 环卫扩充    3-4 BRT扩充
+    Point2D PathBoundL=1;//道路左边界点
+    Point2D PathBoundR=2;//道路右边界点
+    Point2D LaneBoundL=3;//车道左边界点
+    Point2D LaneBoundR=4;//车道右边界点
+}
+enum DebugPointType { //调试点信息类型  环卫扩充
+    AUTO_DRIVE_BOUNDARY    = 0;
+    REF_LINE               = 1;
+    OBS_SL_BOUNDARY        = 2;
+    OBS_POLYGON_BOUNDARY   = 3;
+    OBS_BOX_BOUNDARY       = 4;
+    OTHER1                 = 5;
+    OTHER2                 = 6;
+    LOCAL_PATH             = 7;
+    TRACJETORY             = 8;
+    ALL_LOCAL_PATH            =  9;
+    PATH_BOUNDARY             = 10;
+    PATH_BOUNDARY_OF_FALLBACK = 11;
+    ROUTING_LANE_INFO         = 12;
+    WORKING_DEBUG_INFO        = 13;
+}
+
+message DebugPointInf{
+    repeated Point2D DebugPoint=1;//调试信息点坐标
+    DebugPointType  PointType =2;//调试信息点类型
+    string PointLabel  =3;//调试信息点标签
+}
+enum GearType { //档位类型 
+    GEAR_INVALID    = 0;
+    GEAR_N     = 1;
+    GEAR_D     = 2;
+    GEAR_R     = 3;
+    GEAR_L     = 4;
+    GEAR_P     = 5;
+}
+enum ThrottleFlagType { //油门使能类型 
+    THROT_INVALID        = 0;   //无效
+    THROT_UNACTIVATE     = 1;    //不激活
+    THROT_ACTIVATE       = 2;     //激活
+}
+enum BrakeFlagType { //制动使能类型 
+    BRAKE_INVALID          = 0;    //无效
+    NO_BRAKE         = 1;    //未制动
+    BRAKE_XBR        = 2;     //制动（减速度控）
+    BRAKE_HUMAN      = 3;    //制动(人工驾驶)
+    BRAKE_PERCENT    = 4;    //制动（开度控）
+}
+enum EpbType { //EPB使能类型 
+    EPB_INVALID        = 0;    //无效
+    EPB_OFF     = 1;    //释放
+    EPB_ON       = 2;     //拉起
+}
+
+message ControlPointInf{ //控制点信息
+    GearType GearCmd=1;//档位命令
+    double  AccelerationCmd =2;//纵向加减速度命令
+    ThrottleFlagType ThrottleFlagCmd  =3;//油门使能标志位命令
+    double  ThrottleCmd =4;//油门深度命令
+    BrakeFlagType BrakeFlagCmd  =5;//制动使能标志位命令
+    double BrakeCmd  =6;//制动踏板开度命令
+    double  SteeringCmd =7;//方向盘转角命令
+    EpbType EPBCmd  =8;//制动使能标志位命令
+}
+
+
+///////////////////////////
+message NavigationService{  
+    Header header=1;
+    repeated Recommendation RecommendRoadSegments=2;
+    uint32 NavigationServiceFlg=3;
+}
+
+message DecisionService{ 
+    Header header=1;
+    MissionDecision MDecision=2;
+    DDTDecision DDecision=3;
+    uint32 DecisionServiceFlg=4;
+}
+
+message TrajectoryPlanningService{
+    Header header=1;
+    TrajectoryType TrajType=2;
+    double TrajectoryLength=3;
+    double TrajectoryTime=4;
+    repeated TrajectoryPoint TrajectoryPoints=5;
+    repeated double LatMaxOffset=6;//最大横向偏差矿卡扩充信息
+    repeated RefLinePoint RefLine=7;//参考线信息
+    repeated PathBoundPoint PathBound=8;//道路边界信息
+    DebugPointInf DebugPoint=9;//调试信息
+    ControlPointInf ControlPoint=10;//控制点信息
+    uint32 TrajectoryPlanningServiceFlg=11;
+}
+
+message DecisionPlanMsg{ //决策规划对外总接口
+    NavigationService NavigationInterface=1; //导航
+    DecisionService DecisionInterface=2;  //行为决策
+    TrajectoryPlanningService TrajectoryPlanningInterface=3; //轨迹规划
+}
+
+
+
+
+
+

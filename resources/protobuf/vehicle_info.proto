@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package IBUS;
+
+// vehicle_info.proto
+
+message VehicleInfo {
+    Header  header=1;                       //标准头信息
+    uint32  currentControlId=2;             //当前控制源，0:无效，10:自动驾驶大决策，30:手柄控制,50:PAD控制,80:远程驾驶
+    uint32  autoMode=3;                     //车辆驾驶模式 0:无效，1:自动驾驶，2:人工，3:辅助，4:本地遥控，5:远程
+    uint32  vcuDriveMode=4;                 //整车控制器驱动状态 0:无效，1:自动驾驶，2:人工，3:辅助，4:本地遥控，5:远程
+    uint32  vehicleStatus=5;                //整车状态，0:无效，1:STOP，2:READY，，3:GO，4:L(低速)，5:无效，6:坡行，7:无效
+    double  realSpeed=6;                    //车速, 单位km/h    报文：0x18FFDC24，第2.1~3.8字节。
+    uint32  driverGear=7;                   //驾驶员档位 0:无效，1:N档，2:D档，3:R档，4:L档, 5:R档	   
+    uint32  vcuGear=8;                      //vcu档位 0:无效，1:N档，2:D档，3:R档，4:L档, 5:R档	
+    double  steeringWheelAngle=9;           //方向盘转角
+    double  steeringWheelTorque=10;         //方向盘扭矩--nouse 报文：0x0CFE2A13第6.1-6.8字节
+    uint32  shibaoSteeringWheelWorkMode=11; //车辆方向盘工作模式（世宝），0:未更新 1:待机模式　2:自动驾驶模式 3:保留　4:力矩叠加模式 5:手动模式　6:人工介入状态 7:警告模式状态（二级故障）　8:错误模式状态（一级故障），9:预警模式
+    uint32  operationStateX=12;             //丹佛斯转向状态，0:无效,1:人工模式,18:即将进入自动驾驶,65:自动驾驶,256:安全模式,241:初始化,209:进入自动驾驶安全检查
+    uint32  epbStatus=13;                   //EPB状态 0:无效，1:释放，2:拉起, 3: 释放中，4: 拉起
+    uint32  pLightStatus=14;                //0:无效　1:P灯灭 2:P灯亮 报文：0x18FF1424的第6.1~6.2字节。（矿卡用作epbStatus，0:无效，1:释放，2:拉起）
+    uint32  brakeStatus=15;                 //制动状态，0:无效，1:制动未激活,2:制动激活 报文：0x08FE6E0C的第1.7字节
+    double  realThrottlePedalOpening=16;    //驾驶员油门开度
+    double  vcuThrottlePedalOpening=17;     //vcu油门开度
+    double  breakPedalOpening=18;           //制动踏板开度 ， 0~100
+    uint32  autoQuitReason=19;		         //退出原因　0:无效，1:未退出，2:急停开关，3:系统故障，4:司机踩制动踏板，5:司机踩油门，6:司机操作方向盘
+    uint32  emergencyStopStatus=20;         //紧急停车控制状态, 0:未更新, 1:紧急停车使能, 2:紧急停车不使能 (0:无操作 1:紧急停车 2:缓停???)
+    uint32  emergencyStopReason=21;         //紧急停车的原因，0:未更新, 1：未停车，2：本地PAD急停/缓停，3：PAD急停/缓停，4：云控急停/缓停，5：车辆急停按钮，6:远程急停，other：未知原因急停
+    uint32  autoButton=22;                  //驾驶室进入自动驾驶按钮状态， 0：未更新， 1： off, 2: on；
+    uint32  autoHoldStatus=23;              //AutoHold状态，0:未更新， 1: 未激活，2: 激活，10: 故障，other：无效0x18FF1724第3.3-3.4
+}

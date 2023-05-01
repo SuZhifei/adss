@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package IBUS;
+
+message VersionID{
+    uint32 major=1;
+    uint32 minor=2;
+    uint32 patch=3;
+}
+message TimeStamp{
+    uint64 timeStampS=1;
+    uint64 timeStampNs=2;
+}
+enum FRAMETYPE{
+    NA=0;
+    VCS=1;
+    WGS84=2;
+    UTM=3;
+    CCS=4;  // Custom coordinate system
+}
+enum STATUS{
+    GOOD=0;
+    MED=1;
+    FAILURE=2;
+}
+message Header{
+    uint32 ModuleID=1;
+    VersionID vid=2;
+    uint32 sequenceNum=3;
+    TimeStamp timeStamp=4;
+    FRAMETYPE Frame=5;
+    STATUS Status =6;
+}
+
+message Point2D{  
+      double x=1;            //M X轴坐标或向量    Float
+      double y=2;            //M Y轴坐标或向量    Float
+}  
+
+message Point3D{  
+      double x=1;            //M X轴坐标或向量    Float
+      double y=2;            //M Y轴坐标或向量    Float
+      double z=3;            //M Z轴坐标或向量    Float
+}
+
+message Quaternion {
+    double qx = 1 ;
+    double qy = 2 ;
+    double qz = 3 ;
+    double qw = 4 ;
+}
+
+message Pose{
+    Point3D Position=1;
+    Quaternion Orientation=2;
+    repeated double Covariance=3;
+}
+
+message Velocity{
+    Point3D Linear=1;
+    Point3D Angular =2;
+    repeated double Covariance=3;
+}
+
+message Acceleration {  
+     Point3D Linear=1;              //M 线加速度        Point3D {m/s2, m/s2,m/s2}
+     Point3D Angular =2;            //M 角加速度        Point3D{rad/s2,rad/s2, rad/s2}
+     repeated double Covariance=3;  //O 协方差          Float 数组
+}

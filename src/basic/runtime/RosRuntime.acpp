@@ -1,0 +1,97 @@
+// #include <basic/Context.hpp>
+// #include <basic/DataChannelBase.hpp>
+// #include <basic/DataChannelDeclare.hpp>
+// #include <basic/ParticipantUnionBase.hpp>
+// //#include <data/channel/LoanedPtr.hpp>
+// #include <basic/Qos.hpp>
+// #include <iostream>
+// #include <rclcpp/rclcpp.hpp>
+
+// namespace yutong{
+// namespace adss{
+
+// using ContextImpl = rclcpp::Node;
+
+// std::string GetVersion() { return "v0.0.1-ros2"; }
+// std::string GetRuntimeAgreement() { return "ros2-foxy"; }
+// std::string GetRtGUID() { return GUID_PREFIX "451b3bb8"; }
+
+// bool MatchEndUserRuntime(const std::string &id)
+// {
+//     return id.find("ros2") != std::string::npos;
+// }
+
+// class ParticipantUnionPrivate
+// {
+// public:
+//     std::string ns;
+//     rclcpp::executors::SingleThreadedExecutor executor;
+//     std::thread thread;
+//     std::mutex lock;
+//     std::atomic_bool running;
+//     void Disband()
+//     {
+//         while (running) {
+//             executor.cancel();
+//         }
+//         if (thread.joinable()) {
+//             thread.join();
+//         }
+//     }
+// };
+
+// ParticipantUnionBase::ParticipantUnionBase(const std::string &ns)
+//     : d(new ParticipantUnionPrivate)
+// {
+//     d->ns = ns;
+// }
+// ParticipantUnionBase::~ParticipantUnionBase() { d->Disband(); }
+// std::shared_ptr<Context> ParticipantUnionBase::CreateToken(
+//     const std::string &name)
+// {
+//     auto node = std::make_shared<ContextImpl>(name);
+//     using Type = typename Context::RmwContext::element_type;
+//     auto holder = std::make_shared<Context>();
+//     holder->ctx = std::reinterpret_pointer_cast<Type>(node);
+//     d->executor.add_node(node);
+//     return holder;
+// }
+// void ParticipantUnionBase::Run()
+// {
+//     bool ex = false;
+//     if (d->running.compare_exchange_strong(ex, true)) {
+//         d->executor.spin();
+//         d->running = false;
+//     }
+// }
+// void ParticipantUnionBase::RunBackground()
+// {
+//     bool ex = false;
+//     if (d->running.compare_exchange_strong(ex, true)) {
+//         auto thiz = d;
+//         d->thread = std::thread([thiz]() {
+//             thiz->executor.spin();
+//             thiz->running = false;
+//         });
+//     }
+// }
+// void ParticipantUnionBase::Disband() { d->Disband(); }
+
+// std::string ParticipantUnionBase::Namespace() const { return d->ns; }
+// bool ParticipantUnionBase::IsRunning() const { IsValid() && d->running; }
+// bool ParticipantUnionBase::IsValid() const { return rclcpp::ok(); }
+// NAMESPACE_START(detail)
+
+// NAMESPACE_END(detail)
+
+// void __attribute__((constructor)) init_ros2(void)
+// {
+//     if (!rclcpp::ok()) rclcpp::init(0, nullptr);
+// }
+
+// void __attribute__((destructor)) deinit_ros2(void)
+// {
+//     if (rclcpp::ok()) rclcpp::shutdown();
+// }
+
+// }}
